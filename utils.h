@@ -5,6 +5,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include "utils.h"
+#define MAX_STRING 100
 
 void layNgayHienTai(char *buffer, int maxLen);
 void tinhNgayHetHan48Thang(const char *ngayLap, char *ngayHetHan, int maxLen);

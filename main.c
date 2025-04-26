@@ -2,10 +2,12 @@
 #include <string.h>
 
 #include "docgia.h"
+#include "sach.h"
 
 
 int main() {
     khoiTaoDocGiaMacDinh();
+    khoiTaoSachMacDinh();
     int luaChon;
     do {
         printf("===== MENU CHINH =====\n");
@@ -18,13 +20,15 @@ int main() {
         printf("Nhap lua chon: ");
         scanf("%d", &luaChon);
 
-        switch(luaChon) {
-            case 1: menuDocGia(); break;
-            // case 2: menuSach(); break;
+        switch (luaChon) {
+            case 1: menuDocGia();
+                break;
+            case 2: menuSach();
+                break;
             // case 3: lapPhieuMuon(); break;
             // case 4: lapPhieuTra(); break;
             // case 5: menuThongKe(); break;
         }
-    } while(luaChon != 0);
+    } while (luaChon != 0);
     return 0;
 }

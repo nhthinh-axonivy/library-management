@@ -29,16 +29,16 @@ void menuDocGia() {
         printf("\n===== QUAN LY DOC GIA =====\n");
         printf("1. Hien thi danh sach doc gia\n");
         printf("2. Them doc gia\n");
-        printf("3. Cap nhat doc gia\n");
-        printf("4. Xoa doc gia\n");
+        printf("3. Cap nhat theo ma\n");
+        printf("4. Xoa doc gia theo ma\n");
         printf("5. Tim kiem theo CMND\n");
-        printf("6. Tim kiem theo ho ten\n");
+        printf("6. Tim kiem theo ho va ten\n");
         printf("0. Quay lai\n");
         printf("Chon chuc nang: ");
         scanf("%d", &chon);
-        getchar(); // bỏ '\n'
+        getchar();
 
-        switch(chon) {
+        switch (chon) {
             case 1:
                 hienThiDanhSachDocGia();
                 break;
@@ -58,25 +58,25 @@ void menuDocGia() {
                 xoaDocGiaTheoMa(input);
                 break;
             case 5:
-                printf("Nhap CMND can tim: ");
+                printf("Nhap CMND doc gia can tim: ");
                 fgets(input, MAX_STRING, stdin);
                 input[strcspn(input, "\n")] = '\0';
                 timKiemDocGiaTheoCMND(input);
                 break;
             case 6:
-                printf("Nhap ho ten can tim: ");
+                printf("Nhap ho ten doc gia can tim: ");
                 fgets(input, MAX_STRING, stdin);
                 input[strcspn(input, "\n")] = '\0';
                 timKiemDocGiaTheoTen(input);
                 break;
         }
-    } while(chon != 0);
+    } while (chon != 0);
 }
 
-int themDocGia() {
+void themDocGia() {
     if (soLuongDocGia >= MAX_DOCGIA) {
         printf("Danh sach doc gia da day, vui long xoa bot doc gia!\n");
-        return 0;
+        ketThucChucNang();
     }
 
     sprintf(maDocGia[soLuongDocGia], "DG%04d", soLuongDocGia + 1);
@@ -115,7 +115,7 @@ int themDocGia() {
     diaChi[soLuongDocGia][strcspn(diaChi[soLuongDocGia], "\n")] = '\0';
 
     soLuongDocGia++;
-    return 1;
+    ketThucChucNang();
 }
 
 
@@ -219,13 +219,10 @@ void xoaDocGiaTheoMa(const char *ma) {
     for (int i = 0; i < soLuongDocGia; i++) {
         if (strcmp(maDocGia[i], ma) == 0) {
             found = 1;
-            printf("Tim thay doc gia %d:\n", i + 1);
-            printf("  Ho va ten      : %s\n", hoVaTen[i]);
+            printf("Tim thay doc gia: %s\n", hoVaTen[i]);
             printf("Nhap 'Y' de xoa: ");
 
-            // Đọc input và xóa ký tự thừa trong bộ đệm
             char confirm = getchar();
-
             if (confirm == 'Y' || confirm == 'y') {
                 // Dịch mảng để xóa phần tử
                 for (int j = i; j < soLuongDocGia - 1; j++) {
@@ -240,7 +237,7 @@ void xoaDocGiaTheoMa(const char *ma) {
                     strcpy(ngayHetHan[j], ngayHetHan[j + 1]);
                 }
                 soLuongDocGia--; // Giảm số lượng độc giả
-                printf("Doc gia da duoc xoa.\n");
+                printf("Doc gia da duoc xoa thanh cong!\n");
             } else {
                 printf("Huy xoa doc gia.\n");
             }
@@ -251,9 +248,7 @@ void xoaDocGiaTheoMa(const char *ma) {
     if (!found) {
         printf("Khong tim thay doc gia voi ma: %s\n", ma);
     }
-
-    printf("Nhan Enter de tiep tuc...");
-    getchar(); // Để dừng và chờ người dùng nhập Enter
+    ketThucChucNang();
 }
 
 
@@ -306,7 +301,7 @@ void capNhatDocGiaTheoMa(const char *ma) {
         }
     }
 
-    printf("Khong tim thay ma doc gia voi ma: %s\n",ma);
+    printf("Khong tim thay ma doc gia voi ma: %s\n", ma);
     ketThucChucNang();
 }
 

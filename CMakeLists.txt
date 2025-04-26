@@ -8,4 +8,6 @@ add_executable(QuanLyThuVien main.c
         docgia.h
         utils.c
         utils.h
+        sach.h
+        sach.c
 )

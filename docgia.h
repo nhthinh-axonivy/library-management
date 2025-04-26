@@ -7,7 +7,7 @@
 
 
 #define MAX_DOCGIA 100
-#define MAX_STRING 100
+#include "utils.h"
 
 extern char maDocGia[MAX_DOCGIA][MAX_STRING];
 extern char hoVaTen[MAX_DOCGIA][MAX_STRING];
@@ -24,7 +24,7 @@ extern int soLuongDocGia;
 void menuDocGia();
 
 // Thêm độc giả
-int themDocGia();
+void themDocGia();
 
 // Danh sách độc giả
 void hienThiDanhSachDocGia();
