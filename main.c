@@ -1,13 +1,15 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "docgia.h"
+#include "phieu.h"
 #include "sach.h"
+#include "thongKe.h"
 
 
 int main() {
-    khoiTaoDocGiaMacDinh();
-    khoiTaoSachMacDinh();
+    khoiTaoDocGia();
+    khoiTaoSach();
+    khoiTaoDuLieuPhieu();
     int luaChon;
     do {
         printf("===== MENU CHINH =====\n");
@@ -25,9 +27,9 @@ int main() {
                 break;
             case 2: menuSach();
                 break;
-            // case 3: lapPhieuMuon(); break;
-            // case 4: lapPhieuTra(); break;
-            // case 5: menuThongKe(); break;
+            case 3: lapPhieuMuon(); break;
+            case 4: lapPhieuTra(); break;
+            case 5: menuThongKe(); break;
         }
     } while (luaChon != 0);
     return 0;

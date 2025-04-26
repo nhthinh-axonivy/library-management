@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2025.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles" -S C:\Work\HCMUS\library-management -B C:\Work\HCMUS\library-management\cmake-build-debug
--- Configuring done (0.2s)
+"C:\Program Files\JetBrains\CLion 2024.3.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3.5/bin/ninja/win/x64/ninja.exe" -G Ninja -S C:\Work\HCMUS\QuanLyThuVien -B C:\Work\HCMUS\QuanLyThuVien\cmake-build-debug
+-- Configuring done (0.1s)
 -- Generating done (0.0s)
--- Build files have been written to: C:/Work/HCMUS/library-management/cmake-build-debug
+-- Build files have been written to: C:/Work/HCMUS/QuanLyThuVien/cmake-build-debug

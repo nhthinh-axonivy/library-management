@@ -17,26 +17,16 @@ extern char theLoai[MAX_SACH][MAX_STRING];
 extern int giaSach[MAX_SACH];
 extern int soLuongSach;
 
-// Menu quản lý sách
 void menuSach(void);
-
 void hienThiDanhSachSach();
-
-//Thêm sách
 void themSach();
-
-//Xóa sách theo ISBN
 void xoaSachTheoISBN(const char *isbn);
-
-//Cập nhập sách theo ISBN
 void capNhatSachTheoISBN(const char *isbn);
-
-//Tìm sách theo ISBN
 void timSachTheoISBN(const char *isbn);
-
-//Tìm kiếm sách theo tên
 void timSachTheoTen(const char *ten);
-
-void khoiTaoSachMacDinh();
+int kiemTraSachTonTaiTheoISBN(const char *isbn);
+void thongKeSoLuongSach();
+void thongKeSoLuongSachTheoTheLoai();
+void khoiTaoSach();
 
 #endif //SACH_H

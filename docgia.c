@@ -20,6 +20,7 @@ char diaChi[MAX_DOCGIA][MAX_STRING];
 char ngayLapThe[MAX_DOCGIA][MAX_STRING];
 char ngayHetHan[MAX_DOCGIA][MAX_STRING];
 int soLuongDocGia = 0;
+int demMaDocGia = 0;
 
 
 void menuDocGia() {
@@ -47,26 +48,22 @@ void menuDocGia() {
                 break;
             case 3:
                 printf("Nhap ma doc gia can cap nhat: ");
-                fgets(input, MAX_STRING, stdin);
-                input[strcspn(input, "\n")] = '\0';
+                scanf("%s", input);
                 capNhatDocGiaTheoMa(input);
                 break;
             case 4:
                 printf("Nhap ma doc gia can xoa: ");
-                fgets(input, MAX_STRING, stdin);
-                input[strcspn(input, "\n")] = '\0';
+                scanf("%s", input);
                 xoaDocGiaTheoMa(input);
                 break;
             case 5:
                 printf("Nhap CMND doc gia can tim: ");
-                fgets(input, MAX_STRING, stdin);
-                input[strcspn(input, "\n")] = '\0';
+                scanf("%s", input);
                 timKiemDocGiaTheoCMND(input);
                 break;
             case 6:
                 printf("Nhap ho ten doc gia can tim: ");
-                fgets(input, MAX_STRING, stdin);
-                input[strcspn(input, "\n")] = '\0';
+                scanf(" %[^\n]s", input);
                 timKiemDocGiaTheoTen(input);
                 break;
         }
@@ -79,7 +76,7 @@ void themDocGia() {
         ketThucChucNang();
     }
 
-    sprintf(maDocGia[soLuongDocGia], "DG%04d", soLuongDocGia + 1);
+    sprintf(maDocGia[soLuongDocGia], "DG%03d", demMaDocGia + 1);
     printf("Ma doc gia duoc tao tu dong: %s\n", maDocGia[soLuongDocGia]);
 
     char ngayLap[11];
@@ -91,30 +88,25 @@ void themDocGia() {
     strcpy(ngayHetHan[soLuongDocGia], hetHan);
 
     printf("Nhap ho va ten: ");
-    fgets(hoVaTen[soLuongDocGia], MAX_STRING, stdin);
-    hoVaTen[soLuongDocGia][strcspn(hoVaTen[soLuongDocGia], "\n")] = '\0';
+    scanf(" %[^\n]s", hoVaTen[soLuongDocGia]);
 
     printf("Nhap CMND: ");
-    fgets(cmnd[soLuongDocGia], MAX_STRING, stdin);
-    cmnd[soLuongDocGia][strcspn(cmnd[soLuongDocGia], "\n")] = '\0';
+    scanf("%s", cmnd[soLuongDocGia]);
 
     printf("Nhap ngay sinh: ");
-    fgets(ngaySinh[soLuongDocGia], MAX_STRING, stdin);
-    ngaySinh[soLuongDocGia][strcspn(ngaySinh[soLuongDocGia], "\n")] = '\0';
+    scanf("%s", ngaySinh[soLuongDocGia]);
 
     printf("Nhap gioi tinh: ");
-    fgets(gioiTinh[soLuongDocGia], MAX_STRING, stdin);
-    gioiTinh[soLuongDocGia][strcspn(gioiTinh[soLuongDocGia], "\n")] = '\0';
+    scanf("%s", gioiTinh[soLuongDocGia]);
 
     printf("Nhap email: ");
-    fgets(email[soLuongDocGia], MAX_STRING, stdin);
-    email[soLuongDocGia][strcspn(email[soLuongDocGia], "\n")] = '\0';
+    scanf("%s", email[soLuongDocGia]);
 
     printf("Nhap dia chi: ");
-    fgets(diaChi[soLuongDocGia], MAX_STRING, stdin);
-    diaChi[soLuongDocGia][strcspn(diaChi[soLuongDocGia], "\n")] = '\0';
+    scanf(" %[^\n]s", diaChi[soLuongDocGia]);
 
     soLuongDocGia++;
+    demMaDocGia++;
     ketThucChucNang();
 }
 
@@ -145,8 +137,7 @@ void timKiemDocGiaTheoCMND(const char *cmndCanTim) {
     int found = 0;
 
     for (int i = 0; i < soLuongDocGia; i++) {
-        if (strcmp(cmndCanTim, cmnd[i]) == 0) {
-            // Tìm thấy thì in thông tin độc giả
+        if (kiemTraDocGiaTonTaiTheoCMND(cmndCanTim)) {
             printf("Tim thay doc gia:\n");
             printf("Doc gia %d:\n", i + 1);
             printf("  Ma doc gia     : %s\n", maDocGia[i]);
@@ -163,8 +154,6 @@ void timKiemDocGiaTheoCMND(const char *cmndCanTim) {
             break;
         }
     }
-
-    // Nếu không tìm thấy, thông báo
     if (!found) {
         printf("Khong tim thay doc gia voi cmnd: %s\n", cmndCanTim);
         printf("----------------------------------------\n");
@@ -217,14 +206,13 @@ void xoaDocGiaTheoMa(const char *ma) {
     int found = 0;
 
     for (int i = 0; i < soLuongDocGia; i++) {
-        if (strcmp(maDocGia[i], ma) == 0) {
+        if (kiemTraDocGiaTonTaiTheoMa(ma)) {
             found = 1;
             printf("Tim thay doc gia: %s\n", hoVaTen[i]);
             printf("Nhap 'Y' de xoa: ");
-
-            char confirm = getchar();
+            char confirm;
+            scanf(" %c", &confirm);
             if (confirm == 'Y' || confirm == 'y') {
-                // Dịch mảng để xóa phần tử
                 for (int j = i; j < soLuongDocGia - 1; j++) {
                     strcpy(maDocGia[j], maDocGia[j + 1]);
                     strcpy(hoVaTen[j], hoVaTen[j + 1]);
@@ -236,7 +224,7 @@ void xoaDocGiaTheoMa(const char *ma) {
                     strcpy(ngayLapThe[j], ngayLapThe[j + 1]);
                     strcpy(ngayHetHan[j], ngayHetHan[j + 1]);
                 }
-                soLuongDocGia--; // Giảm số lượng độc giả
+                soLuongDocGia--;
                 printf("Doc gia da duoc xoa thanh cong!\n");
             } else {
                 printf("Huy xoa doc gia.\n");
@@ -262,38 +250,32 @@ void capNhatDocGiaTheoMa(const char *ma) {
 
             printf("  Ho va ten      : %s\n", hoVaTen[i]);
             printf("Cap nhat ho va ten (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
+            scanf(" %[^\n]s", input);
             if (strlen(input) > 0) strcpy(hoVaTen[i], input);
 
             printf("  CMND           : %s\n", cmnd[i]);
             printf("Cap nhat CMND (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
+            scanf("%s", input);
             if (strlen(input) > 0) strcpy(cmnd[i], input);
 
             printf("  Ngay sinh      : %s\n", ngaySinh[i]);
             printf("Cap nhat ngay sinh (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
+            scanf("%s", input);
             if (strlen(input) > 0) strcpy(ngaySinh[i], input);
 
             printf("  Gioi tinh      : %s\n", gioiTinh[i]);
             printf("Cap nhat gioi tinh (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
+            scanf("%s", input);
             if (strlen(input) > 0) strcpy(gioiTinh[i], input);
 
             printf("  Email          : %s\n", email[i]);
             printf("Cap nhat email (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
-            if (strlen(input) > 0) strcpy(email[i], input); // sửa email[soLuongDocGia] thành email[i]
+            scanf("%s", input);
+            if (strlen(input) > 0) strcpy(email[i], input);
 
             printf("  Dia chi        : %s\n", diaChi[i]);
             printf("Cap nhat dia chi (Enter de giu nguyen): ");
-            fgets(input, MAX_STRING, stdin);
-            input[strcspn(input, "\n")] = '\0';
+            scanf(" %[^\n]s", input);
             if (strlen(input) > 0) strcpy(diaChi[i], input);
 
             printf("Cap nhat thanh cong.\n");
@@ -305,8 +287,42 @@ void capNhatDocGiaTheoMa(const char *ma) {
     ketThucChucNang();
 }
 
-void khoiTaoDocGiaMacDinh() {
-    strcpy(maDocGia[0], "DG0001");
+//Thống kê số lượng độc giả đang có trong hệ thống.
+void thongKeSoLuongDocGia() {
+    printf("Tong so luong doc gia: %d\n", soLuongDocGia);
+    ketThucChucNang();
+}
+
+//Thống kee số lượng độc giả theo giới tính  
+void thongKeSoLuongDocGiaTheoGioiTinh() {
+    int nam = 0, nu = 0;
+    for (int i = 0; i < soLuongDocGia; i++) {
+        if (strcmp(gioiTinh[i], "Nam") == 0) nam++;
+        else if (strcmp(gioiTinh[i], "Nu") == 0) nu++;
+    }
+    printf("Doc gia Nam: %d, Doc gia Nu: %d\n", nam, nu);
+    ketThucChucNang();
+}
+
+
+int kiemTraDocGiaTonTaiTheoMa(const char *ma) {
+    for (int i = 0; i < soLuongDocGia; i++) {
+        if (strcmp(maDocGia[i], ma) == 0) return 1;
+    }
+    return 0;
+}
+
+int kiemTraDocGiaTonTaiTheoCMND(const char *cmnd) {
+    for (int i = 0; i < soLuongDocGia; i++) {
+        if (strcmp(cmnd[i], cmnd == 0)) return 1;
+    }
+    return 0;
+}
+
+// Khoi tao test data doc gia
+void khoiTaoDocGia() {
+    // Độc giả 1
+    strcpy(maDocGia[0], "DG001");
     strcpy(hoVaTen[0], "Nguyen Hung Thinh");
     strcpy(cmnd[0], "24810216");
     strcpy(ngaySinh[0], "08/02/1999");
@@ -315,15 +331,58 @@ void khoiTaoDocGiaMacDinh() {
     strcpy(diaChi[0], "09 Nguyen Tu Nha");
     strcpy(ngayLapThe[0], "25/04/2025");
     strcpy(ngayHetHan[0], "25/04/2029");
+    soLuongDocGia++;
+    demMaDocGia++;
 
-    strcpy(maDocGia[1], "DG0002");
+    // Độc giả 2
+    strcpy(maDocGia[1], "DG002");
     strcpy(hoVaTen[1], "Nguyen Thanh Thanh");
-    strcpy(cmnd[1], "9999999");
-    strcpy(ngaySinh[1], "26/04/2025");
+    strcpy(cmnd[1], "25810217");
+    strcpy(ngaySinh[1], "15/06/2000");
     strcpy(gioiTinh[1], "Nu");
-    strcpy(email[1], "9999999@student.hcmus.edu.vn");
+    strcpy(email[1], "25810217@student.hcmus.edu.vn");
     strcpy(diaChi[1], "39B Truong Son");
     strcpy(ngayLapThe[1], "25/04/2025");
     strcpy(ngayHetHan[1], "25/04/2029");
-    soLuongDocGia = 2;
+    soLuongDocGia++;
+    demMaDocGia++;
+
+    // Độc giả 3
+    strcpy(maDocGia[2], "DG003");
+    strcpy(hoVaTen[2], "Le Van Tuan");
+    strcpy(cmnd[2], "26810218");
+    strcpy(ngaySinh[2], "22/08/1998");
+    strcpy(gioiTinh[2], "Nam");
+    strcpy(email[2], "26810218@student.hcmus.edu.vn");
+    strcpy(diaChi[2], "123 Le Loi");
+    strcpy(ngayLapThe[2], "26/04/2025");
+    strcpy(ngayHetHan[2], "26/04/2029");
+    soLuongDocGia++;
+    demMaDocGia++;
+
+    // Độc giả 4
+    strcpy(maDocGia[3], "DG004");
+    strcpy(hoVaTen[3], "Tran Thi Mai");
+    strcpy(cmnd[3], "27810219");
+    strcpy(ngaySinh[3], "30/12/2001");
+    strcpy(gioiTinh[3], "Nu");
+    strcpy(email[3], "27810219@student.hcmus.edu.vn");
+    strcpy(diaChi[3], "45 Nguyen Trai");
+    strcpy(ngayLapThe[3], "27/04/2025");
+    strcpy(ngayHetHan[3], "27/04/2029");
+    soLuongDocGia++;
+    demMaDocGia++;
+
+    // Độc giả 5
+    strcpy(maDocGia[4], "DG005");
+    strcpy(hoVaTen[4], "Pham Van Duc");
+    strcpy(cmnd[4], "28810220");
+    strcpy(ngaySinh[4], "05/03/2000");
+    strcpy(gioiTinh[4], "Nam");
+    strcpy(email[4], "28810220@student.hcmus.edu.vn");
+    strcpy(diaChi[4], "67 Le Duan");
+    strcpy(ngayLapThe[4], "28/04/2025");
+    strcpy(ngayHetHan[4], "28/04/2029");
+    soLuongDocGia++;
+    demMaDocGia++;
 }

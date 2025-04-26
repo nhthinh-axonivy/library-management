@@ -10,4 +10,8 @@ add_executable(QuanLyThuVien main.c
         utils.h
         sach.h
         sach.c
+        phieu.h
+        phieu.c
+        thongKe.c
+        thongKe.h
 )
