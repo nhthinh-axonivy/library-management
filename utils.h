@@ -15,5 +15,6 @@ int laNamNhuan(int nam);
 int ngayTrongThang(int thang, int nam);
 int tinhNgayTrongNam(int ngay, int thang, int nam);
 void ketThucChucNang();
+void readLine(char *buffer, int size);
 
 #endif //UTILS_H

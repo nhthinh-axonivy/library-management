@@ -5,12 +5,15 @@
 #include <stdio.h>
 #include "thongKe.h"
 
+#include <stdlib.h>
+
 #include "docgia.h"
 #include "phieu.h"
 #include "sach.h"
 
 void menuThongKe() {
     int luaChon;
+    char inputBuffer[10];
 
     while (1) {
         // Hiển thị menu thống kê
@@ -22,7 +25,10 @@ void menuThongKe() {
         printf("5. Thong ke so sach dang duoc muon\n");
         printf("6. Thong ke danh sach doc gia bi tre han\n");
         printf("0. Quay lai\n");
-        scanf("%d", &luaChon);
+        printf("Chon chuc nang: ");
+        
+        readLine(inputBuffer, sizeof(inputBuffer));
+        luaChon = atoi(inputBuffer);
 
         // Xử lý các lựa chọn từ người dùng
         switch (luaChon) {
@@ -48,6 +54,10 @@ void menuThongKe() {
                 return;
             default:
                 printf("Lua chon khong hop le! Vui long chon lai.\n");
+        }
+        
+        if (luaChon != 0) {
+            ketThucChucNang();
         }
     }
 }

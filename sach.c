@@ -1,6 +1,7 @@
 //
-// Created by nht82 on 4/26/2025.
+// Created by nht82 on 26/04/2025.
 //
+
 #include "sach.h"
 
 #include <ctype.h>
@@ -18,6 +19,7 @@ int giaSach[MAX_SACH];
 int soLuongSach = 0;
 int demMaSach = 0;
 
+//Menu quản lý sách
 void menuSach(void) {
     int chon;
     char input[MAX_STRING];
@@ -31,8 +33,9 @@ void menuSach(void) {
         printf("6. Tim kiem theo ten\n");
         printf("0. Quay lai\n");
         printf("Chon chuc nang: ");
-        scanf("%d", &chon);
-        getchar();
+        
+        readLine(input, sizeof(input));
+        chon = atoi(input);
 
         switch (chon) {
             case 1:
@@ -43,28 +46,39 @@ void menuSach(void) {
                 break;
             case 3:
                 printf("Nhap ISBN sach can cap nhat: ");
-                scanf("%s", input);
+                readLine(input, sizeof(input));
                 capNhatSachTheoISBN(input);
                 break;
             case 4:
                 printf("Nhap ISBN sach can xoa: ");
-                scanf("%s", input);
+                readLine(input, sizeof(input));
                 xoaSachTheoISBN(input);
                 break;
             case 5:
                 printf("Nhap ISBN sach can tim: ");
-                scanf("%s", input);
+                readLine(input, sizeof(input));
                 timSachTheoISBN(input);
                 break;
             case 6:
                 printf("Nhap ten sach can tim: ");
-                scanf("%s", input);
+                readLine(input, sizeof(input));
                 timSachTheoTen(input);
                 break;
+            case 0:
+                printf("Quay lai menu chinh...\n");
+                break;
+            default:
+                printf("Lua chon khong hop le. Vui long chon lai.\n");
+                break;
+        }
+        
+        if (chon != 0) {
+            ketThucChucNang();
         }
     } while (chon != 0);
 }
 
+//Hieern thị thông tin sách trong hệ thống
 void hienThiDanhSachSach() {
     printf("=== DANH SACH SACH ===\n");
     for (int i = 0; i < soLuongSach; i++) {
@@ -82,54 +96,94 @@ void hienThiDanhSachSach() {
     ketThucChucNang();
 }
 
+// Thêm thng tin sách vào hệ thống
 void themSach() {
     if (soLuongSach >= MAX_SACH) {
         printf("Danh sach sach da day, vui long xoa bot sach!\n");
-        ketThucChucNang();
+        return;
     }
 
+    char inputBuffer[MAX_STRING];
+
+    // Tạo mã ISBN tự động
     sprintf(ISBN[soLuongSach], "ISBN%03d", demMaSach + 1);
     printf("Ma ISBN duoc tao tu dong: %s\n", ISBN[soLuongSach]);
 
-    getchar();
-    printf("Nhap ten sach: ");
-    scanf("%[^\n]s", tenSach[soLuongSach]);
+    // Nhập tên sách với kiểm tra
+    do {
+        printf("Nhap ten sach: ");
+        readLine(tenSach[soLuongSach], MAX_STRING);
+        if (strlen(tenSach[soLuongSach]) == 0) {
+            printf("Ten sach khong duoc de trong. Vui long nhap lai.\n");
+        } else {
+            break;
+        }
+    } while (1);
 
-    getchar();
-    printf("Nhap ten tac gia: ");
-    scanf("%[^\n]s", tacGia[soLuongSach]);
+    // Nhập tên tác giả
+    do {
+        printf("Nhap ten tac gia: ");
+        readLine(tacGia[soLuongSach], MAX_STRING);
+        if (strlen(tacGia[soLuongSach]) == 0) {
+            printf("Ten tac gia khong duoc de trong. Vui long nhap lai.\n");
+        } else {
+            break;
+        }
+    } while (1);
 
-    getchar();
+    // Nhập nhà xuất bản
     printf("Nhap nha xuat ban: ");
-    scanf("%[^\n]s", nhaXuatBan[soLuongSach]);
+    readLine(nhaXuatBan[soLuongSach], MAX_STRING);
 
-    printf("Nhap nam xuat ban: ");
-    scanf("%d", &namXuatBan[soLuongSach]);
+    // Nhập năm xuất bản
+    do {
+        printf("Nhap nam xuat ban: ");
+        readLine(inputBuffer, sizeof(inputBuffer));
+        namXuatBan[soLuongSach] = atoi(inputBuffer);
+        
+        // Giả sử sách hợp lệ chỉ từ năm 1900 đến năm hiện tại
+        if (namXuatBan[soLuongSach] < 1900 || namXuatBan[soLuongSach] > 2025) {
+            printf("Nam xuat ban khong hop le. Vui long nhap nam tu 1900 den 2025.\n");
+        } else {
+            break;
+        }
+    } while (1);
 
-    getchar();
+    // Nhập thể loại
     printf("Nhap the loai: ");
-    scanf("%[^\n]s", theLoai[soLuongSach]);
+    readLine(theLoai[soLuongSach], MAX_STRING);
 
-    printf("Nhap gia sach: ");
-    scanf("%d", &giaSach[soLuongSach]);
+    // Nhập giá sách với kiểm tra
+    do {
+        printf("Nhap gia sach: ");
+        readLine(inputBuffer, sizeof(inputBuffer));
+        giaSach[soLuongSach] = atoi(inputBuffer);
+        
+        if (giaSach[soLuongSach] <= 0) {
+            printf("Gia sach phai lon hon 0. Vui long nhap lai.\n");
+        } else {
+            break;
+        }
+    } while (1);
 
     soLuongSach++;
     demMaSach++;
-    ketThucChucNang();
+    printf("Them sach thanh cong!\n");
 }
 
+//Xóa sách trong hệ thống theo ISBN
 void xoaSachTheoISBN(const char *isbn) {
     int found = 0;
-    char confirm;
+    char confirmBuffer[10];
 
     for (int i = 0; i < soLuongSach; i++) {
         if (strcmp(ISBN[i], isbn) == 0) {
             found = 1;
             printf("Tim thay sach: %s\n", tenSach[i]);
             printf("Nhap 'Y' de xoa: ");
-            scanf(" %c", &confirm);
+            readLine(confirmBuffer, sizeof(confirmBuffer));
 
-            if (confirm == 'Y' || confirm == 'y') {
+            if (confirmBuffer[0] == 'Y' || confirmBuffer[0] == 'y') {
                 for (int j = i; j < soLuongSach - 1; j++) {
                     strcpy(ISBN[j], ISBN[j + 1]);
                     strcpy(tenSach[j], tenSach[j + 1]);
@@ -151,46 +205,56 @@ void xoaSachTheoISBN(const char *isbn) {
     if (!found) {
         printf("Khong tim thay sach voi ISBN: %s\n", isbn);
     }
-    ketThucChucNang();
 }
 
+//Cập nhập thông tin sách theo ISBN
 void capNhatSachTheoISBN(const char *ma) {
     for (int i = 0; i < soLuongSach; i++) {
         if (strcmp(ISBN[i], ma) == 0) {
             printf("Tim thay sach %d:\n", i + 1);
+            char inputBuffer[MAX_STRING];
+            char tempBuffer[MAX_STRING];
 
-            getchar();
             printf("Ten sach hien tai: %s\n", tenSach[i]);
             printf("Cap nhat ten sach (Enter de bo qua): ");
-            scanf("%[^\n]s", tenSach[i]);
+            readLine(tempBuffer, sizeof(tempBuffer));
+            if (strlen(tempBuffer) > 0) {
+                strcpy(tenSach[i], tempBuffer);
+            }
 
-            getchar();
             printf("Tac gia hien tai: %s\n", tacGia[i]);
             printf("Cap nhat tac gia (Enter de bo qua): ");
-            scanf("%[^\n]s", tacGia[i]);
+            readLine(tempBuffer, sizeof(tempBuffer));
+            if (strlen(tempBuffer) > 0) {
+                strcpy(tacGia[i], tempBuffer);
+            }
 
-            getchar();
             printf("NXB hien tai: %s\n", nhaXuatBan[i]);
             printf("Cap nhat NXB (Enter de bo qua): ");
-            scanf("%[^\n]s", nhaXuatBan[i]);
+            readLine(tempBuffer, sizeof(tempBuffer));
+            if (strlen(tempBuffer) > 0) {
+                strcpy(nhaXuatBan[i], tempBuffer);
+            }
 
             printf("Nam XB hien tai: %d\n", namXuatBan[i]);
             printf("Cap nhat nam XB (0 de bo qua): ");
-            int namMoi;
-            scanf("%d", &namMoi);
+            readLine(inputBuffer, sizeof(inputBuffer));
+            int namMoi = atoi(inputBuffer);
             if (namMoi != 0) {
                 namXuatBan[i] = namMoi;
             }
 
-            getchar();
             printf("The loai hien tai: %s\n", theLoai[i]);
             printf("Cap nhat the loai (Enter de bo qua): ");
-            scanf("%[^\n]s", theLoai[i]);
+            readLine(tempBuffer, sizeof(tempBuffer));
+            if (strlen(tempBuffer) > 0) {
+                strcpy(theLoai[i], tempBuffer);
+            }
 
             printf("Gia hien tai: %d\n", giaSach[i]);
             printf("Cap nhat gia (0 de bo qua): ");
-            int giaMoi;
-            scanf("%d", &giaMoi);
+            readLine(inputBuffer, sizeof(inputBuffer));
+            int giaMoi = atoi(inputBuffer);
             if (giaMoi != 0) {
                 giaSach[i] = giaMoi;
             }
@@ -201,10 +265,16 @@ void capNhatSachTheoISBN(const char *ma) {
     }
 
     printf("Khong tim thay sach voi ISBN: %s\n", ma);
-    ketThucChucNang();
 }
 
+//Tìm sách theo mã ISBN
 void timSachTheoISBN(const char *isbn) {
+    if (strlen(isbn) == 0) {
+        printf("ISBN tim kiem khong duoc de trong.\n");
+        printf("----------------------------------------\n");
+        return;
+    }
+    
     int found = 0;
 
     for (int i = 0; i < soLuongSach; i++) {
@@ -217,7 +287,7 @@ void timSachTheoISBN(const char *isbn) {
             printf("  Nha xuat ban  : %s\n", nhaXuatBan[i]);
             printf("  Nam xuat ban  : %d\n", namXuatBan[i]);
             printf("  The loai      : %s\n", theLoai[i]);
-            printf("  Gia           : %d\n", giaSach[i]);
+            printf("  Gia           : %d VND\n", giaSach[i]);
             printf("----------------------------------------\n");
             found = 1;
             break;
@@ -228,9 +298,9 @@ void timSachTheoISBN(const char *isbn) {
         printf("Khong tim thay sach voi ISBN: %s\n", isbn);
         printf("----------------------------------------\n");
     }
-    ketThucChucNang();
 }
 
+//Tìm sách theo tên sách
 void timSachTheoTen(const char *ten) {
     int found = 0;
     char tenCanTimLowercase[MAX_STRING];
@@ -267,6 +337,7 @@ void timSachTheoTen(const char *ten) {
     ketThucChucNang();
 }
 
+//Kiểm tra sách tồn tại trong hệ thososng hay không theo mã ISBN
 int kiemTraSachTonTaiTheoISBN(const char *isbn) {
     for (int i = 0; i < soLuongSach; i++) {
         if (strcmp(ISBN[i], isbn) == 0) return 1;
@@ -274,43 +345,59 @@ int kiemTraSachTonTaiTheoISBN(const char *isbn) {
     return 0;
 }
 
+//Thng kê tổng số lượng sách trong hệ thống
 void thongKeSoLuongSach() {
     printf("Tong so luong sach: %d\n", soLuongSach);
     ketThucChucNang();
 }
 
+//Thống kê số lượng sách theo loại
 void thongKeSoLuongSachTheoTheLoai() {
+    printf("=== THONG KE SACH THEO THE LOAI ===\n");
+    
+    if (soLuongSach == 0) {
+        printf("Chua co sach nao trong thu vien.\n");
+        return;
+    }
+    
     char theLoaiDuyNhat[MAX_SACH][MAX_STRING];
+    int soLuongSachTheoTheLoai[MAX_SACH] = {0};
     int soLuongTheLoaiDuyNhat = 0;
 
+    // Tìm các thể loại duy nhất và đếm số lượng sách của mỗi thể loại
     for (int i = 0; i < soLuongSach; i++) {
         int theLoaiMoi = 1;
+        int theLoaiIndex = -1;
 
         for (int j = 0; j < soLuongTheLoaiDuyNhat; j++) {
             if (strcmp(theLoai[i], theLoaiDuyNhat[j]) == 0) {
                 theLoaiMoi = 0;
+                theLoaiIndex = j;
                 break;
             }
         }
 
         if (theLoaiMoi) {
             strcpy(theLoaiDuyNhat[soLuongTheLoaiDuyNhat], theLoai[i]);
+            soLuongSachTheoTheLoai[soLuongTheLoaiDuyNhat] = 1;
             soLuongTheLoaiDuyNhat++;
+        } else {
+            soLuongSachTheoTheLoai[theLoaiIndex]++;
         }
     }
 
+    printf("So luong the loai sach: %d\n", soLuongTheLoaiDuyNhat);
+    printf("----------------------------------------\n");
+    
     for (int i = 0; i < soLuongTheLoaiDuyNhat; i++) {
-        int dem = 0;
-        for (int j = 0; j < soLuongSach; j++) {
-            if (strcmp(theLoai[j], theLoaiDuyNhat[i]) == 0) {
-                dem++;
-            }
-        }
-        printf("The loai %s: %d sach\n", theLoaiDuyNhat[i], dem);
+        printf("The loai: %-20s | So luong: %d sach\n", theLoaiDuyNhat[i], soLuongSachTheoTheLoai[i]);
     }
-    ketThucChucNang();
+    
+    printf("----------------------------------------\n");
+    printf("Tong so sach: %d\n", soLuongSach);
 }
 
+//Khởi tạo dữ liệu
 void khoiTaoSach() {
     strcpy(ISBN[0], "ISBN001");
     strcpy(tenSach[0], "Lap trinh C co ban");

@@ -104,3 +104,12 @@ void ketThucChucNang() {
     printf("Nhan Enter de tiep tuc...");
     getchar();
 }
+
+// Chức năng đọc input trên dòng
+void readLine(char *buffer, int size) {
+    if (fgets(buffer, size, stdin) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+    } else {
+        buffer[0] = '\0';
+    }
+}
